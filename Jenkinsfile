@@ -14,7 +14,7 @@ pipeline {
         // Swarm
         STACK_NAME = 'noc_rag'
         REPLICAS = '1'
-        NETWORK_NAME = 'development'
+        NETWORK_NAME = 'production'
 
         // VPS
         VPS_HOST = '172.105.124.43'
