@@ -19,14 +19,14 @@ pipeline {
         DEPLOY = 'true'
 
         // Repo + image naming (edit as needed)
-        GIT_REPO = 'github.com/ardzix/noc_rag.git'
+        GIT_REPO = 'github.com/ardzix/rag_poc.git'
         DOCKER_IMAGE = 'ardzix/noc_rag'
         DOCKER_REGISTRY_CREDENTIALS = 'ard-dockerhub'
 
         // Swarm deploy params
         STACK_NAME = 'noc_rag'
         REPLICAS = '1'
-        NETWORK_NAME = 'production'
+        NETWORK_NAME = 'development'
 
         // VPS target (edit as needed)
         VPS_HOST = '172.105.124.43'
