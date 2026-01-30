@@ -99,49 +99,28 @@ pipeline {
                         echo "[INFO] Preparing VPS deployment..."
                         ssh -i "$SSH_KEY_FILE" -o StrictHostKeyChecking=no root@${VPS_HOST} "mkdir -p /root/${STACK_NAME}"
         
-                        echo "[INFO] Copying env & supervisord config..."
+                        echo "[INFO] Copying env & supervisord..."
                         scp -i "$SSH_KEY_FILE" -o StrictHostKeyChecking=no .env root@${VPS_HOST}:/root/${STACK_NAME}/.env
                         scp -i "$SSH_KEY_FILE" -o StrictHostKeyChecking=no supervisord.conf root@${VPS_HOST}:/root/${STACK_NAME}/supervisord.conf
         
-                        echo "[INFO] Deploying service..."
-                        ssh -i "$SSH_KEY_FILE" -o StrictHostKeyChecking=no root@${VPS_HOST} bash -s <<REMOTE
-                        set -e
+                        echo "[INFO] Deploying to swarm..."
+                        ssh -i "$SSH_KEY_FILE" -o StrictHostKeyChecking=no root@${VPS_HOST} bash -c '
+                            docker swarm init || true
+                            docker network create --driver overlay ${NETWORK_NAME} || true
+                            docker service rm ${STACK_NAME} || true
         
-                        echo "[INFO] Checking swarm status..."
-                        if [ "$(docker info --format '{{.Swarm.LocalNodeState}}')" != "active" ]; then
-                          echo "[ERROR] Node not in swarm"
-                          exit 1
-                        fi
-        
-                        echo "[INFO] Checking manager capability..."
-                        if [ "$(docker info --format '{{.Swarm.ControlAvailable}}')" != "true" ]; then
-                          echo "[ERROR] This node is not a swarm manager"
-                          exit 1
-                        fi
-        
-                        echo "[INFO] Verifying network ${NETWORK_NAME}..."
-                        docker network inspect ${NETWORK_NAME} >/dev/null 2>&1 || {
-                          echo "[ERROR] Network not found"
-                          exit 1
-                        }
-        
-                        echo "[INFO] Removing old service if exists..."
-                        docker service rm ${STACK_NAME} >/dev/null 2>&1 || true
-        
-                        echo "[INFO] Creating new service..."
-                        docker service create --name ${STACK_NAME} \
-                          --replicas ${REPLICAS} \
-                          --network ${NETWORK_NAME} \
-                          --env-file /root/${STACK_NAME}/.env \
-                          --mount type=bind,src=/root/${STACK_NAME}/supervisord.conf,dst=/etc/supervisor/conf.d/supervisord.conf,ro=true \
-                          ${DOCKER_IMAGE}:latest
-        
-                        echo "[INFO] Deploy success."
-        REMOTE
+                            docker service create --name ${STACK_NAME} \
+                                --replicas ${REPLICAS} \
+                                --network ${NETWORK_NAME} \
+                                --env-file /root/${STACK_NAME}/.env \
+                                --mount type=bind,src=/root/${STACK_NAME}/supervisord.conf,dst=/etc/supervisor/conf.d/supervisord.conf,ro=true \
+                                ${DOCKER_IMAGE}:latest
+                        '
                     '''
                 }
             }
         }
+
     }
 
     post {
