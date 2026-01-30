@@ -1,38 +1,27 @@
 pipeline {
     agent any
 
-    /*
-      Jenkins CI/CD (Docker build + push + deploy to Docker Swarm)
-
-      Notes:
-      - This pipeline intentionally mirrors the working pattern from the reference project.
-      - Update GIT_REPO, DOCKER_IMAGE, STACK_NAME, and VPS_HOST to match the actual repo and infra.
-      - Required Jenkins credentials (suggested IDs; adjust to your Jenkins):
-        - github-ardzix: Username/Password for GitHub clone
-        - ard-dockerhub: DockerHub registry credentials
-        - noc_rag-env: File credential for .env
-        - sso_public_pem: File credential for public.pem
-        - stag-arnatech-sa-01: SSH private key to VPS (root)
-    */
-
     environment {
         DEPLOY = 'true'
 
-        // Repo + image naming (edit as needed)
+        // Repo
         GIT_REPO = 'github.com/ardzix/rag_poc.git'
+
+        // Docker
         DOCKER_IMAGE = 'ardzix/noc_rag'
         DOCKER_REGISTRY_CREDENTIALS = 'ard-dockerhub'
 
-        // Swarm deploy params
+        // Swarm
         STACK_NAME = 'noc_rag'
         REPLICAS = '1'
         NETWORK_NAME = 'development'
 
-        // VPS target (edit as needed)
+        // VPS
         VPS_HOST = '172.105.124.43'
     }
 
     stages {
+
         stage('Clean Workspace') {
             steps {
                 sh '''
@@ -43,7 +32,13 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'github-ardzix', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'github-ardzix',
+                        usernameVariable: 'GIT_USER',
+                        passwordVariable: 'GIT_TOKEN'
+                    )
+                ]) {
                     sh '''
                         mv Jenkinsfile ../Jenkinsfile.tmp
                         rm -rf ./*
@@ -55,15 +50,15 @@ pipeline {
             }
         }
 
-        stage('Inject Environment Variables and PEM Files') {
+        stage('Inject Env & PEM') {
             steps {
                 withCredentials([
                     file(credentialsId: 'noc_rag-env', variable: 'ENV_FILE'),
                     file(credentialsId: 'sso_public_pem', variable: 'PUBLIC_PEM_FILE')
                 ]) {
                     sh """
-                        cp \"${ENV_FILE}\" .env
-                        cp \"${PUBLIC_PEM_FILE}\" public.pem
+                        cp "${ENV_FILE}" .env
+                        cp "${PUBLIC_PEM_FILE}" public.pem
                     """
                 }
             }
@@ -93,29 +88,39 @@ pipeline {
             }
             steps {
                 withCredentials([
-                    sshUserPrivateKey(credentialsId: 'stag-arnatech-sa-01', keyFileVariable: 'SSH_KEY_FILE')
+                    sshUserPrivateKey(
+                        credentialsId: 'stag-arnatech-sa-01',
+                        keyFileVariable: 'SSH_KEY_FILE'
+                    )
                 ]) {
-                    sh '''
+                    sh """
                         echo "[INFO] Preparing VPS deployment..."
                         ssh -i "$SSH_KEY_FILE" -o StrictHostKeyChecking=no root@${VPS_HOST} "mkdir -p /root/${STACK_NAME}"
-        
+
                         echo "[INFO] Copying env & supervisord..."
                         scp -i "$SSH_KEY_FILE" -o StrictHostKeyChecking=no .env root@${VPS_HOST}:/root/${STACK_NAME}/.env
                         scp -i "$SSH_KEY_FILE" -o StrictHostKeyChecking=no supervisord.conf root@${VPS_HOST}:/root/${STACK_NAME}/supervisord.conf
-        
-                        echo "[INFO] Deploying to swarm..."
-                        ssh -i "$SSH_KEY_FILE" -o StrictHostKeyChecking=no root@${VPS_HOST} bash -c '
-                            docker swarm init || true
-                            docker network create --driver overlay ${NETWORK_NAME} || true
-                            docker service rm ${STACK_NAME} || true
-        
-                            docker service create --name ${STACK_NAME} --replicas ${REPLICAS} --network ${NETWORK_NAME} --env-file /root/${STACK_NAME}/.env --mount type=bind,src=/root/${STACK_NAME}/supervisord.conf,dst=/etc/supervisor/conf.d/supervisord.conf,ro=true ${DOCKER_IMAGE}:latest
-                        '
-                    '''
+
+                        echo "[INFO] Deploying Docker service..."
+                        ssh -i "$SSH_KEY_FILE" -o StrictHostKeyChecking=no root@${VPS_HOST} <<EOF
+docker swarm init || true
+docker network create --driver overlay ${NETWORK_NAME} || true
+docker service rm ${STACK_NAME} || true
+
+docker service create \
+  --name ${STACK_NAME} \
+  --replicas ${REPLICAS} \
+  --network ${NETWORK_NAME} \
+  --env-file /root/${STACK_NAME}/.env \
+  --mount type=bind,src=/root/${STACK_NAME}/supervisord.conf,dst=/etc/supervisor/conf.d/supervisord.conf,ro=true \
+  ${DOCKER_IMAGE}:latest
+
+echo "[INFO] Deploy success."
+EOF
+                    """
                 }
             }
         }
-
     }
 
     post {
@@ -130,4 +135,3 @@ pipeline {
         }
     }
 }
-
