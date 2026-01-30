@@ -1,0 +1,160 @@
+LAPORAN KINERJA TRIWULAN III 2025
+PT ARNATECH INDONESIA
+
+==============================================
+
+I. RINGKASAN EKSEKUTIF
+
+Pada triwulan III 2025, kinerja perusahaan menunjukkan peningkatan signifikan dengan pencapaian beberapa target utama. Total revenue mencapai Rp 45,5 miliar, melampaui target sebesar Rp 42 miliar.
+
+II. KEY PERFORMANCE INDICATORS (KPI)
+
+A. Net Promoter Score (NPS)
+
+Regional Breakdown:
+
+JAWA BARAT
+Bulan Juli 2025:
+- Target: 80
+- Capaian: 78
+- Gap: -2
+- Status: Belum Tercapai
+
+Bulan Agustus 2025:
+- Target: 82
+- Capaian: 81
+- Gap: -1
+- Status: Hampir Tercapai
+
+Bulan September 2025:
+- Target: 83
+- Capaian: 84
+- Gap: +1
+- Status: Melampaui Target
+
+JAWA TIMUR
+Bulan Juli 2025:
+- Target: 75
+- Capaian: 77
+- Gap: +2
+- Status: Melampaui Target
+
+Bulan Agustus 2025:
+- Target: 77
+- Capaian: 79
+- Gap: +2
+- Status: Melampaui Target
+
+Bulan September 2025:
+- Target: 78
+- Capaian: 80
+- Gap: +2
+- Status: Melampaui Target
+
+JAWA TENGAH
+Bulan Juli 2025: Target 70, Capaian 68
+Bulan Agustus 2025: Target 72, Capaian 74
+Bulan September 2025: Target 73, Capaian 76
+
+B. Customer Satisfaction Index (CSI)
+
+Juli 2025: 85%
+Agustus 2025: 87%
+September 2025: 89%
+
+Target CSI Q3: 86%
+Rata-rata Capaian: 87%
+
+C. Revenue Growth (dalam miliar Rupiah)
+
+Juli 2025:
+- Target: 13.5
+- Actual: 14.2
+- Growth: +5.2%
+
+Agustus 2025:
+- Target: 14.0
+- Actual: 15.1
+- Growth: +7.9%
+
+September 2025:
+- Target: 14.5
+- Actual: 16.2
+- Growth: +11.7%
+
+Total Q3 2025:
+- Target: 42.0
+- Actual: 45.5
+- Achievement: 108.3%
+
+D. Customer Retention Rate
+
+Q3 2025: 92.5%
+Q2 2025: 90.3%
+Q1 2025: 89.7%
+Improvement: +2.8% vs Q1
+
+E. Employee Satisfaction Score
+
+Juli: 78
+Agustus: 80
+September: 82
+Average Q3: 80
+Target: 75
+
+III. ANALISIS REGIONAL
+
+A. Jawa Barat
+- NPS menunjukkan tren positif dari 78 ke 84
+- Program perbaikan layanan pelanggan efektif
+- Focus area: Customer support response time
+
+B. Jawa Timur
+- Konsisten melampaui target
+- Best performing region untuk NPS
+- Best practice untuk di-replicate ke region lain
+
+C. Jawa Tengah
+- Peningkatan signifikan di Agustus-September
+- Recovery dari performa Juli yang kurang optimal
+
+IV. REVENUE ANALYSIS
+
+Pertumbuhan revenue yang konsisten sepanjang Q3 menunjukkan:
+1. Peningkatan customer acquisition sebesar 15%
+2. Upselling berhasil di 28% existing customers
+3. Churn rate menurun ke 7.5% dari sebelumnya 10.2%
+
+V. CUSTOMER METRICS
+
+A. New Customers Acquired
+Juli: 1,240 customers
+Agustus: 1,380 customers
+September: 1,520 customers
+Total Q3: 4,140 customers
+
+B. Customer Churn
+Juli: 95 customers (churn rate 8.2%)
+Agustus: 87 customers (churn rate 7.3%)
+September: 78 customers (churn rate 6.8%)
+
+VI. REKOMENDASI
+
+1. Pertahankan momentum positif Q3 untuk Q4
+2. Replikasi best practices Jawa Timur ke regional lain
+3. Tingkatkan fokus customer support di Jawa Barat
+4. Target NPS Q4: 85 untuk semua regional
+5. Investasi dalam customer success program
+
+VII. TARGET Q4 2025
+
+- NPS All Regions: 85
+- CSI: 90%
+- Revenue: Rp 48 miliar
+- Customer Retention: 93%
+- Employee Satisfaction: 82
+
+---
+Disusun oleh: Tim Analisis Bisnis
+Tanggal Laporan: 30 September 2025
+Periode: Q3 2025 (Juli - September 2025)

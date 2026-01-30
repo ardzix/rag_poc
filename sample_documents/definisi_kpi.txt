@@ -1,0 +1,217 @@
+DEFINISI KEY PERFORMANCE INDICATORS (KPI)
+PT ARNATECH INDONESIA
+
+==============================================
+
+1. NET PROMOTER SCORE (NPS)
+
+Definisi:
+NPS adalah metrik untuk mengukur kepuasan dan loyalitas pelanggan berdasarkan kemungkinan mereka merekomendasikan produk/layanan ke orang lain.
+
+Cara Pengukuran:
+- Survey dengan pertanyaan: "Seberapa besar kemungkinan Anda merekomendasikan layanan kami ke teman/kolega?" (skala 0-10)
+- Kategorisasi:
+  * Promoters (9-10): Pelanggan sangat puas dan loyal
+  * Passives (7-8): Pelanggan puas tapi tidak antusias
+  * Detractors (0-6): Pelanggan tidak puas
+
+Formula:
+NPS = % Promoters - % Detractors
+
+Range Nilai:
+-100 hingga +100
+
+Interpretasi:
+- NPS > 70: Excellent
+- NPS 50-70: Great
+- NPS 30-50: Good
+- NPS 0-30: Needs Improvement
+- NPS < 0: Critical
+
+Benchmark Industry:
+- Technology/SaaS: 30-40
+- E-commerce: 50-60
+- Financial Services: 30-35
+
+Target Perusahaan:
+- Q3 2025: 75-83 (tergantung regional)
+- Q4 2025: 85 (semua regional)
+
+==============================================
+
+2. CUSTOMER SATISFACTION INDEX (CSI)
+
+Definisi:
+CSI mengukur tingkat kepuasan pelanggan secara keseluruhan terhadap produk dan layanan yang diberikan.
+
+Cara Pengukuran:
+Survey kepuasan dengan beberapa dimensi:
+1. Kualitas Produk (bobot 30%)
+2. Kualitas Layanan (bobot 30%)
+3. Harga (bobot 20%)
+4. Kemudahan Penggunaan (bobot 20%)
+
+Skala: 1-5 (1=Sangat Tidak Puas, 5=Sangat Puas)
+
+Formula:
+CSI = (Total Score / Max Score) × 100%
+
+Target:
+- Q3 2025: 86%
+- Q4 2025: 90%
+
+==============================================
+
+3. CUSTOMER RETENTION RATE
+
+Definisi:
+Persentase pelanggan yang tetap menggunakan layanan dalam periode tertentu.
+
+Formula:
+Retention Rate = ((E-N)/S) × 100%
+
+Dimana:
+- E = Jumlah customer di akhir periode
+- N = Jumlah customer baru yang acquired selama periode
+- S = Jumlah customer di awal periode
+
+Target:
+- Q3 2025: 90%
+- Q4 2025: 93%
+
+Interpretasi:
+- >90%: Excellent
+- 85-90%: Good
+- 75-85%: Average
+- <75%: Needs Improvement
+
+==============================================
+
+4. CHURN RATE
+
+Definisi:
+Persentase pelanggan yang berhenti menggunakan layanan dalam periode tertentu.
+
+Formula:
+Churn Rate = (Lost Customers / Total Customers at Start) × 100%
+
+Relationship:
+Churn Rate = 100% - Retention Rate
+
+Target:
+- Q3 2025: < 10%
+- Q4 2025: < 7%
+
+Acceptable Churn (by Industry):
+- SaaS: 5-7% annual
+- E-commerce: 20-30% annual
+- Subscription Services: 10-15% annual
+
+==============================================
+
+5. REVENUE GROWTH
+
+Definisi:
+Persentase pertumbuhan pendapatan dibandingkan periode sebelumnya.
+
+Formula:
+Growth % = ((Current Revenue - Previous Revenue) / Previous Revenue) × 100%
+
+Types:
+- Month-over-Month (MoM) Growth
+- Quarter-over-Quarter (QoQ) Growth
+- Year-over-Year (YoY) Growth
+
+Target:
+- Monthly: 5-8%
+- Quarterly: 15-20%
+- Yearly: 50-60%
+
+==============================================
+
+6. EMPLOYEE SATISFACTION SCORE
+
+Definisi:
+Tingkat kepuasan karyawan terhadap lingkungan kerja, kompensasi, dan kultur perusahaan.
+
+Cara Pengukuran:
+Internal survey dengan aspek:
+1. Work-Life Balance
+2. Compensation & Benefits
+3. Career Growth
+4. Management Support
+5. Company Culture
+
+Skala: 0-100
+
+Interpretasi:
+- 80-100: Excellent
+- 70-80: Good
+- 60-70: Fair
+- <60: Needs Attention
+
+Target: 75-82
+
+==============================================
+
+7. CUSTOMER ACQUISITION COST (CAC)
+
+Definisi:
+Biaya rata-rata untuk mendapatkan satu pelanggan baru.
+
+Formula:
+CAC = Total Marketing & Sales Costs / Number of New Customers
+
+Benchmark:
+- Harus < 1/3 dari Customer Lifetime Value (CLV)
+- Payback period: idealnya < 12 bulan
+
+==============================================
+
+8. CUSTOMER LIFETIME VALUE (CLV)
+
+Definisi:
+Total revenue yang dihasilkan dari satu pelanggan selama masa berlangganan.
+
+Formula:
+CLV = (Average Purchase Value × Purchase Frequency × Customer Lifespan)
+
+Target Ratio:
+CLV:CAC ratio > 3:1 (idealnya 5:1)
+
+==============================================
+
+FREQUENCY PENGUKURAN:
+
+Daily Metrics:
+- Revenue
+- New customers
+
+Weekly Metrics:
+- Churn rate
+- Support ticket resolution
+
+Monthly Metrics:
+- NPS
+- CSI
+- CAC/CLV
+
+Quarterly Metrics:
+- Comprehensive review all KPIs
+- Strategic adjustments
+
+==============================================
+
+OWNERSHIP:
+
+NPS & CSI: Customer Success Team
+Revenue Growth: Sales Team
+Retention & Churn: Customer Success & Product Team
+Employee Satisfaction: HR Team
+
+==============================================
+
+Dokumen ini di-review setiap quarter dan di-update sesuai perubahan strategi bisnis.
+
+Last Updated: 1 Oktober 2025
+Version: 2.1
