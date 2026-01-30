@@ -28,7 +28,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Collect static files (optional; can be run at deploy time if env is required)
-# RUN python manage.py collectstatic --noinput
+RUN python manage.py collectstatic --noinput
 
 # Set environment variables
 ENV DJANGO_SETTINGS_MODULE=config.settings
