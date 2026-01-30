@@ -12,6 +12,7 @@ drf-yasg2>=1.19.4
 
 djangorestframework-simplejwt==5.3.1
 drf-yasg==1.21.10
+whitenoise
 
 # uWSGI (for Docker + supervisord deployment)
 uWSGI==2.0.26
