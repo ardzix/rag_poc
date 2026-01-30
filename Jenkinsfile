@@ -104,18 +104,19 @@ pipeline {
                         scp -i "$SSH_KEY_FILE" -o StrictHostKeyChecking=no supervisord.conf root@${VPS_HOST}:/root/${STACK_NAME}/supervisord.conf
 
                         echo "[INFO] Deploying Docker service to Swarm..."
-                        ssh -i "$SSH_KEY_FILE" -o StrictHostKeyChecking=no root@${VPS_HOST} bash -c '
-                            docker swarm init || true
-                            docker network create --driver overlay ${NETWORK_NAME} || true
-                            docker service rm ${STACK_NAME} || true
+                        ssh -i "$SSH_KEY_FILE" -o StrictHostKeyChecking=no root@${VPS_HOST} bash -s <<REMOTE
+                        set -e
+                        docker swarm init || true
+                        docker network create --driver overlay ${NETWORK_NAME} || true
+                        docker service rm ${STACK_NAME} || true
 
-                            docker service create --name ${STACK_NAME} \
-                                --replicas ${REPLICAS} \
-                                --network ${NETWORK_NAME} \
-                                --env-file /root/${STACK_NAME}/.env \
-                                --mount type=bind,src=/root/${STACK_NAME}/supervisord.conf,dst=/etc/supervisor/conf.d/supervisord.conf,ro=true \
-                                ${DOCKER_IMAGE}:latest
-                        '
+                        docker service create --name ${STACK_NAME} \
+                            --replicas ${REPLICAS} \
+                            --network ${NETWORK_NAME} \
+                            --env-file /root/${STACK_NAME}/.env \
+                            --mount type=bind,src=/root/${STACK_NAME}/supervisord.conf,dst=/etc/supervisor/conf.d/supervisord.conf,ro=true \
+                            ${DOCKER_IMAGE}:latest
+                        REMOTE
                     '''
                 }
             }
