@@ -7,6 +7,7 @@ python-docx>=1.1.0
 python-magic>=0.4.27
 psycopg2-binary>=2.9.9
 gunicorn>=21.2.0
+# CORS: allow cross-origin requests (header, allow all origins via settings)
 django-cors-headers>=4.3.0
 drf-yasg2>=1.19.4
 

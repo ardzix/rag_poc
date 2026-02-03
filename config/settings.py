@@ -180,10 +180,14 @@ SWAGGER_SETTINGS = {
 }
 
 # CORS Configuration
-CORS_ALLOWED_ORIGINS = config(
-    'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:3000,http://127.0.0.1:3000'
-).split(',')
+# Allow all origins (untuk dev/demo; di production sebaiknya gunakan CORS_ALLOWED_ORIGINS)
+CORS_ALLOW_ALL_ORIGINS = config('CORS_ALLOW_ALL_ORIGINS', default=True, cast=bool)
+
+# Jika CORS_ALLOW_ALL_ORIGINS False, gunakan daftar origin ini
+# CORS_ALLOWED_ORIGINS = config(
+#     'CORS_ALLOWED_ORIGINS',
+#     default='http://localhost:3000,http://127.0.0.1:3000'
+# ).split(',')
 
 CORS_ALLOW_CREDENTIALS = True
 
