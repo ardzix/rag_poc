@@ -50,6 +50,35 @@ class ChatViewSet(viewsets.ViewSet):
         
         # Auto-detect apakah perlu chart dari message
         include_chart = detect_chart_needed(message)
+
+        # Ambil history percakapan jika conversation_id ada (multi-turn context)
+        # Ambil beberapa turn terakhir agar follow-up seperti "tampilkan dalam bentuk chart"
+        # tetap memiliki konteks dari pertanyaan sebelumnya.
+        conversation_messages = []
+        if conversation_id:
+            try:
+                # Ambil 10 chat terakhir dalam room ini (ascending agar urut)
+                recent_logs = list(
+                    ChatLog.objects.filter(
+                        owner_user_id=request.user.user_id,
+                        conversation_id=conversation_id
+                    ).order_by('-created_at')[:10]
+                )
+                recent_logs.reverse()
+
+                for log in recent_logs:
+                    if log.user_message:
+                        conversation_messages.append(
+                            {"role": "user", "content": log.user_message}
+                        )
+                    if log.response_text:
+                        # Simpan jawaban AI sebagai assistant message (tanpa chart config)
+                        conversation_messages.append(
+                            {"role": "assistant", "content": log.response_text}
+                        )
+            except Exception:
+                # Jika gagal ambil history, lanjut tanpa history
+                conversation_messages = []
         
         # Ambil SEMUA dokumen dari database (POC: dokumen global, bukan per-user)
         documents = Document.objects.all().order_by('-created_at')
@@ -72,7 +101,8 @@ class ChatViewSet(viewsets.ViewSet):
             message=message,
             documents=documents_data,
             include_chart=include_chart,
-            document_ids=document_ids
+            document_ids=document_ids,
+            conversation_messages=conversation_messages,
         )
         
         if error_msg:

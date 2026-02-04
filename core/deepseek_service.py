@@ -98,7 +98,8 @@ USER_MESSAGE:
         message: str,
         documents: List[Dict],
         include_chart: bool = False,
-        document_ids: Optional[List[int]] = None
+        document_ids: Optional[List[int]] = None,
+        conversation_messages: Optional[List[Dict[str, str]]] = None,
     ) -> Tuple[Optional[Dict], Optional[str]]:
         """
         Memanggil DeepSeek API
@@ -108,6 +109,8 @@ USER_MESSAGE:
             documents: List dokumen untuk konteks
             include_chart: Apakah user meminta chart
             document_ids: List ID dokumen (untuk logging di prompt)
+            conversation_messages: List messages historis DeepSeek (role/content),
+                contoh: [{"role":"user","content":"..."},{"role":"assistant","content":"..."}]
         
         Returns:
             Tuple (response_dict, error_message)
@@ -126,13 +129,25 @@ USER_MESSAGE:
                 document_ids=document_ids or []
             )
             
+            # Siapkan rangkaian messages (multi-turn) jika ada history
+            messages: List[Dict[str, str]] = [
+                {"role": "system", "content": DeepSeekService.SYSTEM_PROMPT},
+            ]
+            if conversation_messages:
+                # Pastikan formatnya benar dan tidak terlalu besar
+                for m in conversation_messages:
+                    role = (m or {}).get("role")
+                    content = (m or {}).get("content")
+                    if role in ("user", "assistant") and isinstance(content, str) and content.strip():
+                        messages.append({"role": role, "content": content})
+
+            # Tambahkan prompt user terbaru (sudah termasuk konteks dokumen)
+            messages.append({"role": "user", "content": user_prompt})
+
             # Siapkan payload untuk DeepSeek API
             payload = {
                 "model": settings.DEEPSEEK_MODEL,
-                "messages": [
-                    {"role": "system", "content": DeepSeekService.SYSTEM_PROMPT},
-                    {"role": "user", "content": user_prompt}
-                ],
+                "messages": messages,
                 "temperature": 0.7,
                 "max_tokens": 8000,  # Maximum untuk response lebih detail (impress client)
             }
