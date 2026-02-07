@@ -37,6 +37,7 @@ document_upload_schema = swagger_auto_schema(
     - PDF (dengan text layer, bukan hasil scan)
     - DOCX (Microsoft Word)
     - TXT (Plain text)
+    - XLSX (Microsoft Excel)
     
     **Batasan:**
     - Ukuran maksimal: 10 MB
@@ -103,10 +104,10 @@ document_upload_schema = swagger_auto_schema(
                 "application/json": {
                     "error": "Format file tidak didukung",
                     "mime_type": "image/jpeg",
-                    "supported_formats": "PDF, DOCX, TXT"
-                }
+                "supported_formats": "PDF, DOCX, TXT, XLSX"
             }
-        ),
+        }
+    ),
         422: openapi.Response(
             description="Gagal ekstraksi",
             examples={

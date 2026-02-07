@@ -74,6 +74,7 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
             'owner_user_id',
             'title',
             'content',
+            'structured_data',
             'source_filename',
             'mime_type',
             'content_length',

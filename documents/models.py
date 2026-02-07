@@ -11,6 +11,11 @@ class Document(models.Model):
     )
     title = models.CharField(max_length=500)
     content = models.TextField(help_text="Teks hasil ekstraksi dokumen")
+    structured_data = models.JSONField(
+        blank=True,
+        null=True,
+        help_text="Data terstruktur (misalnya tabel dari Excel)"
+    )
     source_filename = models.CharField(max_length=500)
     mime_type = models.CharField(max_length=100, blank=True, null=True)
     content_length = models.IntegerField(

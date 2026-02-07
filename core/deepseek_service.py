@@ -69,6 +69,19 @@ USER_MESSAGE:
             doc_id = doc.get('id', '?')
             title = doc.get('title', 'Untitled')
             content = doc.get('content', '')
+            structured_data = doc.get('structured_data')
+            
+            # Gabungkan structured data (jika ada) ke konten dokumen
+            if structured_data:
+                try:
+                    structured_json = json.dumps(structured_data, ensure_ascii=True)
+                except Exception:
+                    structured_json = ""
+                
+                if structured_json:
+                    content = (
+                        f"{content}\n\nSTRUCTURED_DATA_JSON:\n{structured_json}"
+                    )
             
             # Trim content jika terlalu panjang per dokumen
             # Alokasi proporsional untuk setiap dokumen

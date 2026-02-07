@@ -32,7 +32,7 @@ schema_view = get_schema_view(
         
         ## Features
         
-        - 📄 **Document Management**: Upload dan kelola dokumen (PDF, DOCX, TXT)
+        - 📄 **Document Management**: Upload dan kelola dokumen (PDF, DOCX, TXT, XLSX)
         - 💬 **Chat**: Chat dengan konteks dokumen menggunakan LLM
         - 📊 **Chart Generation**: Generate chart dalam format Chart.js
         - 🔐 **SSO Authentication**: Integrasi dengan SSO Arnatech

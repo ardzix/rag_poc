@@ -68,13 +68,13 @@ class DocumentViewSet(viewsets.ViewSet):
                 {
                     "error": "Format file tidak didukung",
                     "mime_type": mime_type,
-                    "supported_formats": "PDF, DOCX, TXT"
+                    "supported_formats": "PDF, DOCX, TXT, XLSX"
                 },
                 status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
             )
         
         # Ekstraksi teks
-        extracted_text, error_msg = DocumentExtractor.extract(uploaded_file, mime_type)
+        extracted_text, error_msg, structured_data = DocumentExtractor.extract(uploaded_file, mime_type)
         
         if error_msg:
             return Response(
@@ -99,7 +99,8 @@ class DocumentViewSet(viewsets.ViewSet):
             content=extracted_text,
             source_filename=uploaded_file.name,
             mime_type=mime_type,
-            content_length=len(extracted_text)
+            content_length=len(extracted_text),
+            structured_data=structured_data
         )
         
         # Kembalikan response

@@ -88,7 +88,8 @@ class ChatViewSet(viewsets.ViewSet):
             {
                 'id': doc.id,
                 'title': doc.title,
-                'content': doc.content
+                'content': doc.content,
+                'structured_data': doc.structured_data
             }
             for doc in documents
         ]

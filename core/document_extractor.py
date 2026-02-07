@@ -2,10 +2,13 @@
 Service untuk ekstraksi teks dari berbagai format dokumen
 """
 import re
-from typing import Tuple, Optional
+from typing import Tuple, Optional, Dict, Any
+from datetime import date, datetime
 import PyPDF2
 import docx
 import magic
+import openpyxl
+from openpyxl.utils import get_column_letter
 
 
 class DocumentExtractor:
@@ -17,6 +20,7 @@ class DocumentExtractor:
         'application/pdf': 'pdf',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
         'text/plain': 'txt',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
     }
     
     @staticmethod
@@ -34,6 +38,11 @@ class DocumentExtractor:
             # Reset lagi
             file_obj.seek(0)
             
+            # Fallback untuk XLSX yang kadang terdeteksi sebagai application/zip
+            filename = getattr(file_obj, 'name', '') or ''
+            if mime == 'application/zip' and filename.lower().endswith('.xlsx'):
+                return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            
             return mime
         except Exception:
             # Fallback ke content_type dari upload
@@ -47,7 +56,7 @@ class DocumentExtractor:
         return mime_type in DocumentExtractor.SUPPORTED_MIME_TYPES
     
     @staticmethod
-    def extract(file_obj, mime_type: str) -> Tuple[str, Optional[str]]:
+    def extract(file_obj, mime_type: str) -> Tuple[str, Optional[str], Optional[Dict[str, Any]]]:
         """
         Ekstrak teks dari file
         
@@ -56,24 +65,29 @@ class DocumentExtractor:
             mime_type: MIME type yang sudah terdeteksi
         
         Returns:
-            Tuple (extracted_text, error_message)
-            Jika berhasil: (text, None)
-            Jika gagal: ("", error_message)
+            Tuple (extracted_text, error_message, structured_data)
+            Jika berhasil: (text, None, structured_data or None)
+            Jika gagal: ("", error_message, None)
         """
         try:
             file_obj.seek(0)
             
             if mime_type == 'application/pdf':
-                return DocumentExtractor._extract_pdf(file_obj)
+                text, err = DocumentExtractor._extract_pdf(file_obj)
+                return (text, err, None)
             elif mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                return DocumentExtractor._extract_docx(file_obj)
+                text, err = DocumentExtractor._extract_docx(file_obj)
+                return (text, err, None)
             elif mime_type == 'text/plain':
-                return DocumentExtractor._extract_txt(file_obj)
+                text, err = DocumentExtractor._extract_txt(file_obj)
+                return (text, err, None)
+            elif mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                return DocumentExtractor._extract_xlsx(file_obj)
             else:
-                return ("", f"MIME type tidak didukung: {mime_type}")
+                return ("", f"MIME type tidak didukung: {mime_type}", None)
                 
         except Exception as e:
-            return ("", f"Error saat ekstraksi: {str(e)}")
+            return ("", f"Error saat ekstraksi: {str(e)}", None)
     
     @staticmethod
     def _extract_pdf(file_obj) -> Tuple[str, Optional[str]]:
@@ -147,6 +161,85 @@ class DocumentExtractor:
             
         except Exception as e:
             return ("", f"Gagal membaca TXT: {str(e)}")
+    
+    @staticmethod
+    def _normalize_cell_value(value):
+        """
+        Normalisasi nilai cell agar JSON-serializable dan konsisten
+        """
+        if isinstance(value, datetime):
+            return value.isoformat()
+        if isinstance(value, date):
+            return value.isoformat()
+        return value
+    
+    @staticmethod
+    def _extract_xlsx(file_obj) -> Tuple[str, Optional[str], Optional[Dict[str, Any]]]:
+        """Ekstrak teks dan struktur dari XLSX"""
+        try:
+            wb = openpyxl.load_workbook(file_obj, data_only=True)
+            sheets_data = []
+            summary_parts = []
+            
+            for ws in wb.worksheets:
+                # Ambil semua rows
+                raw_rows = list(ws.iter_rows(values_only=True))
+                
+                if not raw_rows:
+                    continue
+                
+                # Tentukan header
+                header_row = raw_rows[0]
+                if any(cell is not None and str(cell).strip() for cell in header_row):
+                    columns = [str(cell).strip() if cell is not None else "" for cell in header_row]
+                    data_rows = raw_rows[1:]
+                else:
+                    # Fallback: gunakan A, B, C...
+                    max_cols = max(len(r) for r in raw_rows)
+                    columns = [get_column_letter(i + 1) for i in range(max_cols)]
+                    data_rows = raw_rows
+                
+                # Normalisasi rows
+                rows = []
+                for row in data_rows:
+                    normalized_row = [
+                        DocumentExtractor._normalize_cell_value(cell)
+                        for cell in row
+                    ]
+                    rows.append(normalized_row)
+                
+                sheet_info = {
+                    "name": ws.title,
+                    "columns": columns,
+                    "rows": rows
+                }
+                sheets_data.append(sheet_info)
+                
+                # Summary text per sheet (untuk konteks LLM)
+                row_count = len(rows)
+                preview_rows = rows[:5]
+                summary_parts.append(
+                    f"Sheet: {ws.title}\n"
+                    f"Kolom: {', '.join(columns)}\n"
+                    f"Total Rows: {row_count}\n"
+                    f"Contoh Rows (maks 5): {preview_rows}\n"
+                )
+            
+            if not sheets_data:
+                return ("", "Dokumen XLSX kosong", None)
+            
+            summary_text = "\n".join(summary_parts)
+            normalized_text = DocumentExtractor._normalize_text(summary_text)
+            
+            structured_data = {
+                "format": "xlsx",
+                "sheets": sheets_data
+            }
+            
+            return (normalized_text, None, structured_data)
+            
+        except Exception as e:
+            return ("", f"Gagal membaca XLSX: {str(e)}", None)
     
     @staticmethod
     def _normalize_text(text: str) -> str:
